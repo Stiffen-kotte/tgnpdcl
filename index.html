@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>T.G.N.P.D.C.L Cloud Dashboard</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
+  body { background: #f0f4f8; color: #1e293b; padding-bottom: 30px; }
+  .top-bar { background: linear-gradient(135deg, #0d3b66 0%, #1a5276 100%); color: #fff; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 3px 10px rgba(0,0,0,0.18); position: sticky; top: 0; z-index: 100; }
+  .brand-title { font-size: 20px; font-weight: 800; letter-spacing: 2px; font-family: Georgia, serif; }
+  .top-actions { display: flex; gap: 8px; }
+  .icon-pill { background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.35); color: #fff; padding: 6px 11px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 4px; }
+  .search-wrap { padding: 12px 14px 6px 14px; }
+  .search-box { background: #fff; border-radius: 12px; padding: 8px 12px; display: flex; align-items: center; box-shadow: 0 2px 6px rgba(0,0,0,0.06); border: 1px solid #e2e8f0; }
+  .search-box input { border: none; outline: none; width: 100%; font-size: 15px; color: #334155; }
+  .search-clear { background: #e2e8f0; border: none; border-radius: 50%; width: 24px; height: 24px; font-size: 12px; font-weight: bold; color: #475569; cursor: pointer; }
+  .consumer-card { background: #fff; margin: 8px 14px 14px 14px; border-radius: 14px; padding: 12px; box-shadow: 0 3px 10px rgba(0,0,0,0.06); border: 1px solid #e2e8f0; }
+  .consumer-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  .field-box label { display: block; font-size: 10px; font-weight: 700; color: #475569; margin-bottom: 4px; text-transform: uppercase; }
+  .field-box input { width: 100%; padding: 8px 6px; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 13px; font-weight: 600; color: #0f172a; outline: none; background: #f8fafc; }
+  .field-box input:focus { border-color: #0d3b66; background: #fff; }
+  .status-strip { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 8px; border-top: 1px dashed #e2e8f0; }
+  #statusTxt { font-size: 12px; font-weight: 600; color: #0d3b66; }
+  .clear-inputs-btn { background: #fee2e2; color: #dc2626; border: none; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; }
+  .grid-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px 10px; padding: 6px 14px; }
+  .menu-item { display: flex; flex-direction: column; align-items: center; text-align: center; cursor: pointer; }
+  .icon-card { width: 68px; height: 68px; background: #fff; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 32px; box-shadow: 0 4px 12px rgba(15,23,42,0.08); border: 1px solid #e2e8f0; position: relative; transition: transform 0.12s; }
+  .menu-item:active .icon-card { transform: scale(0.93); }
+  .badge-dot { position: absolute; top: -6px; right: -8px; background: #dc2626; color: #fff; font-size: 9px; font-weight: 800; padding: 2px 6px; border-radius: 10px; }
+  .menu-label { margin-top: 7px; font-size: 11px; font-weight: 700; color: #1e293b; line-height: 1.25; }
+  .footer { text-align: center; margin-top: 26px; font-size: 12px; font-weight: 600; color: #64748b; }
+</style>
+</head>
+<body>
+<div class="top-bar">
+  <div class="brand-title">T.G.N.P.D.C.L</div>
+  <div class="top-actions">
+    <button class="icon-pill" onclick="requestCloudSync()">🔄 Sync</button>
+    <button class="icon-pill" onclick="sendToApp('OPEN_SETTINGS')">🔧 Settings</button>
+  </div>
+</div>
+
+<div class="search-wrap">
+  <div class="search-box">
+    <input type="text" id="menuSearch" placeholder="Search Menu..." onkeyup="filterMenu()">
+    <button class="search-clear" onclick="clearSearch()">✕</button>
+  </div>
+</div>
+
+<div class="consumer-card">
+  <div class="consumer-row">
+    <div class="field-box">
+      <label>Service No</label>
+      <input type="text" id="serviceNo" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false">
+    </div>
+    <div class="field-box">
+      <label>USC No</label>
+      <input type="text" id="uscNo" inputmode="numeric" autocomplete="off">
+    </div>
+    <div class="field-box">
+      <label>Meter No</label>
+      <input type="text" id="meterNo" autocomplete="off">
+    </div>
+  </div>
+  <div class="status-strip">
+    <span id="statusTxt">Enter Service / USC / Meter & tap icon</span>
+    <button class="clear-inputs-btn" onclick="clearInputs()">Clear</button>
+  </div>
+</div>
+
+<div class="grid-container" id="menuGrid">
+  <div class="menu-item" data-title="SERVICE DETAILS CONSUMER" onclick="runTab('ServiceDetails')">
+    <div class="icon-card">🏠</div>
+    <div class="menu-label">SERVICE DETAILS</div>
+  </div>
+
+  <div class="menu-item" data-title="CURRENT BILL SPOT READING" onclick="runTab('CurrentBill')">
+    <div class="icon-card">🧾</div>
+    <div class="menu-label">CURRENT BILL</div>
+  </div>
+
+  <div class="menu-item" data-title="CONSUMPTION HISTORY UNITS" onclick="runTab('Consumption')">
+    <div class="icon-card">📊</div>
+    <div class="menu-label">CONSUMPTION</div>
+  </div>
+
+  <div class="menu-item" data-title="PAYMENT HISTORY BILLDESK" onclick="runTab('PaymentHistory')">
+    <div class="icon-card">💳</div>
+    <div class="menu-label">PAYMENT HISTORY</div>
+  </div>
+
+  <div class="menu-item" data-title="LOCATION MAP GPS POLE" onclick="openMap()">
+    <div class="icon-card" id="mapIconCard">📍</div>
+    <div class="menu-label" id="mapLabel">LOCATION MAP</div>
+  </div>
+
+  <div class="menu-item" data-title="WINDY RADAR WEATHER STORM" onclick="openWindy()">
+    <div class="icon-card">🌪️</div>
+    <div class="menu-label">WINDY RADAR</div>
+  </div>
+
+  <div class="menu-item" data-title="UPDATE APP SYNC LATEST" onclick="requestCloudSync()">
+    <div class="icon-card">📲<span class="badge-dot" id="verBadge">LIVE</span></div>
+    <div class="menu-label">UPDATE APP</div>
+  </div>
+
+  <div class="menu-item" data-title="PORTAL SETTINGS CREDENTIALS" onclick="sendToApp('OPEN_SETTINGS')">
+    <div class="icon-card">🔧</div>
+    <div class="menu-label">PORTAL SETTINGS</div>
+  </div>
+</div>
+
+<div class="footer">this app created by kotte praveen</div>
+
+<script>
+  var savedLat = "NONE", savedLon = "NONE";
+
+  function sendToApp(cmd) {
+    if (window.AppInventor) window.AppInventor.setWebViewString(cmd);
+  }
+
+  function setStatus(msg) {
+    var el = document.getElementById('statusTxt');
+    if (el) el.innerText = msg;
+  }
+
+  function clearSearch() {
+    var inp = document.getElementById('menuSearch');
+    if (inp) { inp.value = ''; filterMenu(); }
+  }
+
+  function filterMenu() {
+    var q = (document.getElementById('menuSearch').value || '').toUpperCase();
+    var items = document.querySelectorAll('.menu-item');
+    for (var i = 0; i < items.length; i++) {
+      var t = (items[i].getAttribute('data-title') || items[i].innerText || '').toUpperCase();
+      items[i].style.display = (t.indexOf(q) > -1) ? 'flex' : 'none';
+    }
+  }
+
+  function clearInputs() {
+    ['serviceNo', 'uscNo', 'meterNo'].forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+    savedLat = "NONE"; savedLon = "NONE";
+    setStatus("Enter Service / USC / Meter & tap icon");
+  }
+
+  function updateFields(s, u, m, lat, lon) {
+    if (s && s !== 'NONE' && document.getElementById('serviceNo')) document.getElementById('serviceNo').value = s;
+    if (u && u !== 'NONE' && document.getElementById('uscNo')) document.getElementById('uscNo').value = u;
+    if (m && m !== 'NONE' && document.getElementById('meterNo')) document.getElementById('meterNo').value = m;
+    if (lat && lat !== 'NONE' && lon && lon !== 'NONE') {
+      savedLat = lat; savedLon = lon;
+      setStatus("GPS Found: " + lat + ", " + lon);
+    }
+  }
+
+  function runTab(tabName, customUrl) {
+    var s = (document.getElementById('serviceNo').value || '').trim().toUpperCase();
+    var u = (document.getElementById('uscNo').value || '').trim();
+    var m = (document.getElementById('meterNo').value || '').trim();
+    var sType = 'NONE', sVal = 'NONE';
+    if (s !== '') { sType = 'SERVICE'; sVal = s; }
+    else if (u !== '') { sType = 'USC'; sVal = u; }
+    else if (m !== '') { sType = 'METER'; sVal = m; }
+    sendToApp("RUN|" + tabName + "|" + sType + "|" + sVal + "|" + (s || "NONE") + "|" + (u || "NONE") + "|" + (m || "NONE") + "|" + (customUrl || "NONE"));
+  }
+
+  function openExternal(url) {
+    sendToApp("OPEN_URL|" + url);
+  }
+
+  function openMap() {
+    sendToApp("OPEN_MAP|" + savedLat + "|" + savedLon);
+  }
+
+  function openWindy() {
+    sendToApp("OPEN_WINDY|" + savedLat + "|" + savedLon);
+  }
+
+  function requestCloudSync() {
+    setStatus("Syncing latest updates...");
+    sendToApp("SYNC_CLOUD|NOW");
+  }
+</script>
+</body>
+</html>
