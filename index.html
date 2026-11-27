@@ -3,188 +3,423 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>T.G.N.P.D.C.L Cloud Dashboard</title>
+<title>T.G.N.P.D.C.L Field Portal</title>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
-  body { background: #f0f4f8; color: #1e293b; padding-bottom: 30px; }
-  .top-bar { background: linear-gradient(135deg, #0d3b66 0%, #1a5276 100%); color: #fff; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 3px 10px rgba(0,0,0,0.18); position: sticky; top: 0; z-index: 100; }
-  .brand-title { font-size: 20px; font-weight: 800; letter-spacing: 2px; font-family: Georgia, serif; }
-  .top-actions { display: flex; gap: 8px; }
-  .icon-pill { background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.35); color: #fff; padding: 6px 11px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 4px; }
-  .search-wrap { padding: 12px 14px 6px 14px; }
-  .search-box { background: #fff; border-radius: 12px; padding: 8px 12px; display: flex; align-items: center; box-shadow: 0 2px 6px rgba(0,0,0,0.06); border: 1px solid #e2e8f0; }
-  .search-box input { border: none; outline: none; width: 100%; font-size: 15px; color: #334155; }
-  .search-clear { background: #e2e8f0; border: none; border-radius: 50%; width: 24px; height: 24px; font-size: 12px; font-weight: bold; color: #475569; cursor: pointer; }
-  .consumer-card { background: #fff; margin: 8px 14px 14px 14px; border-radius: 14px; padding: 12px; box-shadow: 0 3px 10px rgba(0,0,0,0.06); border: 1px solid #e2e8f0; }
-  .consumer-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
-  .field-box label { display: block; font-size: 10px; font-weight: 700; color: #475569; margin-bottom: 4px; text-transform: uppercase; }
-  .field-box input { width: 100%; padding: 8px 6px; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 13px; font-weight: 600; color: #0f172a; outline: none; background: #f8fafc; }
-  .field-box input:focus { border-color: #0d3b66; background: #fff; }
-  .status-strip { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 8px; border-top: 1px dashed #e2e8f0; }
-  #statusTxt { font-size: 12px; font-weight: 600; color: #0d3b66; }
-  .clear-inputs-btn { background: #fee2e2; color: #dc2626; border: none; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; }
-  .grid-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px 10px; padding: 6px 14px; }
-  .menu-item { display: flex; flex-direction: column; align-items: center; text-align: center; cursor: pointer; }
-  .icon-card { width: 68px; height: 68px; background: #fff; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 32px; box-shadow: 0 4px 12px rgba(15,23,42,0.08); border: 1px solid #e2e8f0; position: relative; transition: transform 0.12s; }
-  .menu-item:active .icon-card { transform: scale(0.93); }
-  .badge-dot { position: absolute; top: -6px; right: -8px; background: #dc2626; color: #fff; font-size: 9px; font-weight: 800; padding: 2px 6px; border-radius: 10px; }
-  .menu-label { margin-top: 7px; font-size: 11px; font-weight: 700; color: #1e293b; line-height: 1.25; }
-  .footer { text-align: center; margin-top: 26px; font-size: 12px; font-weight: 600; color: #64748b; }
+  * { box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
+  body { margin: 0; background: #eef2f6; color: #1e293b; }
+  .header { background: #143d73; color: #fff; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 10; box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
+  .header h1 { margin: 0; font-size: 19px; letter-spacing: 1px; font-weight: 700; }
+  .header-btns { display: flex; gap: 8px; }
+  .h-btn { background: rgba(255,255,255,0.16); border: 1px solid rgba(255,255,255,0.28); color: #fff; padding: 6px 11px; border-radius: 7px; font-size: 12px; font-weight: 600; cursor: pointer; }
+  .h-btn:active { background: rgba(255,255,255,0.3); }
+
+  .container { padding: 12px; max-width: 520px; margin: auto; }
+  .search-wrap { position: relative; margin-bottom: 10px; }
+  .search-wrap input { width: 100%; padding: 10px 34px 10px 14px; border-radius: 10px; border: 1px solid #cbd5e1; font-size: 14px; outline: none; background: #fff; }
+  .search-clear { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: #e2e8f0; border: none; border-radius: 50%; width: 22px; height: 22px; font-size: 12px; cursor: pointer; }
+
+  .card { background: #fff; border-radius: 14px; padding: 14px; box-shadow: 0 2px 8px rgba(15,23,42,0.06); margin-bottom: 14px; }
+  .num-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .num-box label { display: block; font-size: 10px; font-weight: 700; color: #475569; margin-bottom: 4px; text-transform: uppercase; }
+  .num-box input { width: 100%; padding: 9px 8px; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 13px; font-weight: 600; color: #0f172a; outline: none; }
+  .num-box input:focus { border-color: #143d73; background: #f8fafc; }
+  .num-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+  .hint { font-size: 11px; color: #143d73; font-weight: 600; }
+  .clear-btn { background: #fee2e2; color: #b91c1c; border: none; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; }
+
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .tile { display: flex; flex-direction: column; align-items: center; text-align: center; cursor: pointer; }
+  .icon-box { width: 72px; height: 72px; background: #fff; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 32px; box-shadow: 0 3px 10px rgba(15,23,42,0.07); position: relative; transition: transform 0.12s; }
+  .tile:active .icon-box { transform: scale(0.94); }
+  .tile span { margin-top: 7px; font-size: 11px; font-weight: 700; color: #1e293b; line-height: 1.25; }
+  .badge-live { position: absolute; top: -6px; right: -6px; background: #dc2626; color: #fff; font-size: 9px; font-weight: 800; padding: 2px 6px; border-radius: 10px; }
+
+  .footer { text-align: center; margin: 20px 0 12px; font-size: 12px; font-weight: 700; color: #475569; }
+
+  /* Screen 2 (Settings) & Tap-to-Fill Popups */
+  #screen2 { display: none; }
+  .s-group { margin-bottom: 12px; position: relative; }
+  .s-group label { display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 4px; }
+  .s-group input { width: 100%; padding: 10px 12px; border: 1.5px solid #cbd5e1; border-radius: 9px; font-size: 13px; background: #f8fafc; color: #0f172a; }
+  .s-title { font-size: 14px; font-weight: 800; color: #143d73; margin: 0 0 12px 0; }
+  .save-btn { width: 100%; background: #15803d; color: #fff; border: none; padding: 13px; border-radius: 11px; font-size: 15px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 10px rgba(21,128,61,0.25); }
+
+  /* Suggestion Pop-up Modal */
+  .popup-backdrop { position: fixed; inset: 0; background: rgba(15,23,42,0.45); display: none; align-items: flex-end; justify-content: center; z-index: 50; }
+  .popup-sheet { background: #fff; width: 100%; max-width: 520px; border-radius: 18px 18px 0 0; padding: 16px; box-shadow: 0 -4px 20px rgba(0,0,0,0.2); animation: slideUp 0.18s ease-out; }
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  .popup-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .popup-head h4 { margin: 0; font-size: 14px; color: #143d73; }
+  .popup-close { background: #f1f5f9; border: none; border-radius: 50%; width: 28px; height: 28px; font-weight: 700; cursor: pointer; }
+  .sug-item { padding: 11px 12px; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 9px; margin-bottom: 8px; font-size: 12.5px; font-weight: 600; color: #0f172a; cursor: pointer; word-break: break-all; }
+  .sug-item:active { background: #dbeafe; border-color: #143d73; }
+  .toast { position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%); background: #0f172a; color: #fff; padding: 9px 18px; border-radius: 20px; font-size: 12px; font-weight: 600; display: none; z-index: 99; white-space: nowrap; }
 </style>
 </head>
 <body>
-<div class="top-bar">
-  <div class="brand-title">T.G.N.P.D.C.L</div>
-  <div class="top-actions">
-    <button class="icon-pill" onclick="requestCloudSync()">🔄 Sync</button>
-    <button class="icon-pill" onclick="sendToApp('OPEN_SETTINGS')">🔧 Settings</button>
-  </div>
-</div>
 
-<div class="search-wrap">
-  <div class="search-box">
-    <input type="text" id="menuSearch" placeholder="Search Menu..." onkeyup="filterMenu()">
-    <button class="search-clear" onclick="clearSearch()">✕</button>
-  </div>
-</div>
-
-<div class="consumer-card">
-  <div class="consumer-row">
-    <div class="field-box">
-      <label>Service No</label>
-      <input type="text" id="serviceNo" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false">
-    </div>
-    <div class="field-box">
-      <label>USC No</label>
-      <input type="text" id="uscNo" inputmode="numeric" autocomplete="off">
-    </div>
-    <div class="field-box">
-      <label>Meter No</label>
-      <input type="text" id="meterNo" autocomplete="off">
+<!-- ==================== SCREEN 1: DASHBOARD ==================== -->
+<div id="screen1">
+  <div class="header">
+    <h1>T.G.N.P.D.C.L</h1>
+    <div class="header-btns">
+      <button class="h-btn" onclick="syncCloud()">🔄 Sync</button>
+      <button class="h-btn" onclick="openSettings()">⚙️ Settings</button>
     </div>
   </div>
-  <div class="status-strip">
-    <span id="statusTxt">Enter Service / USC / Meter & tap icon</span>
-    <button class="clear-inputs-btn" onclick="clearInputs()">Clear</button>
+
+  <div class="container">
+    <div class="search-wrap">
+      <input type="text" id="menuSearch" placeholder="Search Menu..." oninput="filterTiles()">
+      <button class="search-clear" onclick="document.getElementById('menuSearch').value='';filterTiles();">✕</button>
+    </div>
+
+    <div class="card">
+      <div class="num-grid">
+        <div class="num-box">
+          <label>Service No</label>
+          <input type="text" id="serviceNo" placeholder="51 01 07862" oninput="onNumInput('SERVICE')">
+        </div>
+        <div class="num-box">
+          <label>USC No</label>
+          <input type="text" id="uscNo" placeholder="15746081" oninput="onNumInput('USC')">
+        </div>
+        <div class="num-box">
+          <label>Meter No</label>
+          <input type="text" id="meterNo" placeholder="03415626" oninput="onNumInput('METER')">
+        </div>
+      </div>
+      <div class="num-footer">
+        <span class="hint" id="statusHint">Enter Service / USC / Meter & tap icon</span>
+        <button class="clear-btn" onclick="clearNumbers()">Clear</button>
+      </div>
+    </div>
+
+    <!-- Dynamic Menu Grid: Future new labels automatically render here without APK update -->
+    <div class="grid" id="menuGrid"></div>
+
+    <div class="footer">this app created by kotte praveen</div>
   </div>
 </div>
 
-<div class="grid-container" id="menuGrid">
-  <div class="menu-item" data-title="SERVICE DETAILS CONSUMER" onclick="runTab('ServiceDetails')">
-    <div class="icon-card">🏠</div>
-    <div class="menu-label">SERVICE DETAILS</div>
+<!-- ==================== SCREEN 2: SETTINGS ==================== -->
+<div id="screen2">
+  <div class="header">
+    <button class="h-btn" onclick="closeSettings()">← Back</button>
+    <h1>Portal Settings & Links</h1>
+    <div style="width:45px;"></div>
   </div>
 
-  <div class="menu-item" data-title="CURRENT BILL SPOT READING" onclick="runTab('CurrentBill')">
-    <div class="icon-card">🧾</div>
-    <div class="menu-label">CURRENT BILL</div>
-  </div>
+  <div class="container">
+    <div class="card">
+      <h3 class="s-title">1. Login Credentials (Tap box for quick fill)</h3>
+      <div class="s-group">
+        <label>Circle ID</label>
+        <input type="text" id="cfgCircle" onclick="openPopup('cfgCircle', 'Select Circle ID', SUGGESTIONS.circles)">
+      </div>
+      <div class="s-group">
+        <label>ERO ID</label>
+        <input type="text" id="cfgEro" onclick="openPopup('cfgEro', 'Select ERO ID', SUGGESTIONS.eros)">
+      </div>
+      <div class="s-group">
+        <label>Username</label>
+        <input type="text" id="cfgUser" placeholder="Enter EBS Username">
+      </div>
+      <div class="s-group">
+        <label>Password</label>
+        <input type="password" id="cfgPass" placeholder="Enter EBS Password">
+      </div>
+    </div>
 
-  <div class="menu-item" data-title="CONSUMPTION HISTORY UNITS" onclick="runTab('Consumption')">
-    <div class="icon-card">📊</div>
-    <div class="menu-label">CONSUMPTION</div>
-  </div>
+    <div class="card">
+      <h3 class="s-title">2. Portal Links (Tap box for Pop-up Link)</h3>
+      <div id="dynamicLinkBoxes"></div>
+    </div>
 
-  <div class="menu-item" data-title="PAYMENT HISTORY BILLDESK" onclick="runTab('PaymentHistory')">
-    <div class="icon-card">💳</div>
-    <div class="menu-label">PAYMENT HISTORY</div>
-  </div>
-
-  <div class="menu-item" data-title="LOCATION MAP GPS POLE" onclick="openMap()">
-    <div class="icon-card" id="mapIconCard">📍</div>
-    <div class="menu-label" id="mapLabel">LOCATION MAP</div>
-  </div>
-
-  <div class="menu-item" data-title="WINDY RADAR WEATHER STORM" onclick="openWindy()">
-    <div class="icon-card">🌪️</div>
-    <div class="menu-label">WINDY RADAR</div>
-  </div>
-
-  <div class="menu-item" data-title="UPDATE APP SYNC LATEST" onclick="requestCloudSync()">
-    <div class="icon-card">📲<span class="badge-dot" id="verBadge">LIVE</span></div>
-    <div class="menu-label">UPDATE APP</div>
-  </div>
-
-  <div class="menu-item" data-title="PORTAL SETTINGS CREDENTIALS" onclick="sendToApp('OPEN_SETTINGS')">
-    <div class="icon-card">🔧</div>
-    <div class="menu-label">PORTAL SETTINGS</div>
+    <button class="save-btn" onclick="saveSettings()">💾 Save Settings</button>
+    <div class="footer">this app created by kotte praveen</div>
   </div>
 </div>
 
-<div class="footer">this app created by kotte praveen</div>
+<!-- Tap-to-Fill Pop-up Sheet -->
+<div class="popup-backdrop" id="popupBackdrop" onclick="closePopup(event)">
+  <div class="popup-sheet" onclick="event.stopPropagation()">
+    <div class="popup-head">
+      <h4 id="popupTitle">Select Option</h4>
+      <button class="popup-close" onclick="document.getElementById('popupBackdrop').style.display='none'">✕</button>
+    </div>
+    <div id="popupList"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
 
 <script>
-  var savedLat = "NONE", savedLon = "NONE";
+// ==================== DYNAMIC PORTAL REGISTRY ====================
+// Future updates: Adding a new item here automatically adds BOTH a Screen 1 Icon AND a Screen 2 Link Box!
+const PORTAL_ITEMS = [
+  { key: "ServiceDetails", title: "SERVICE DETAILS", icon: "🏠", linkLabel: "1. Service Details Link", defaultUrl: "http://210.212.223.83:9000/EBS/Consumer Management/ConsumerDetails.jsp" },
+  { key: "CurrentBill", title: "CURRENT BILL", icon: "🧾", linkLabel: "2. Current Bill / Spot Readings Link", defaultUrl: "http://210.212.223.83:9000/EBS/SpotD/SpotReadings.jsp" },
+  { key: "Consumption", title: "CONSUMPTION", icon: "📊", linkLabel: "3. Consumption Details Link", defaultUrl: "http://210.212.223.83:9000/EBS/Consumer Management/ConsumptionDetails.jsp" },
+  { key: "PaymentHistory", title: "PAYMENT HISTORY", icon: "💳", linkLabel: "4. Payment History Link", defaultUrl: "https://www.billdesk.com/pgidsk/pgmerc/npdcl/NPDCLDetails.jsp" }
+];
 
-  function sendToApp(cmd) {
-    if (window.AppInventor) window.AppInventor.setWebViewString(cmd);
-  }
+const SUGGESTIONS = {
+  circles: ["KOTHAGUDEM BADRADRI", "KHAMMAM", "WARANGAL", "HANUMAKONDA", "KARIMNAGAR", "NIZAMABAD", "ADILABAD"],
+  eros: ["ERO/YELLANDU", "ERO/KOTHAGUDEM", "ERO/PALVONCHA", "ERO/BHADRACHALAM", "ERO/MANUGURU", "ERO/KHAMMAM-I"],
+  loginUrl: ["http://210.212.223.83:9000/EBS/"],
+  ServiceDetails: ["http://210.212.223.83:9000/EBS/Consumer Management/ConsumerDetails.jsp"],
+  CurrentBill: ["http://210.212.223.83:9000/EBS/SpotD/SpotReadings.jsp"],
+  Consumption: ["http://210.212.223.83:9000/EBS/Consumer Management/ConsumptionDetails.jsp"],
+  PaymentHistory: ["https://www.billdesk.com/pgidsk/pgmerc/npdcl/NPDCLDetails.jsp"]
+};
 
-  function setStatus(msg) {
-    var el = document.getElementById('statusTxt');
-    if (el) el.innerText = msg;
-  }
+let lastEditedType = 'SERVICE';
+let activeInputId = '';
+let consumerCache = JSON.parse(localStorage.getItem('TGNPDCL_CACHE') || '{}');
 
-  function clearSearch() {
-    var inp = document.getElementById('menuSearch');
-    if (inp) { inp.value = ''; filterMenu(); }
-  }
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.innerText = msg;
+  t.style.display = 'block';
+  setTimeout(() => t.style.display = 'none', 2500);
+}
 
-  function filterMenu() {
-    var q = (document.getElementById('menuSearch').value || '').toUpperCase();
-    var items = document.querySelectorAll('.menu-item');
-    for (var i = 0; i < items.length; i++) {
-      var t = (items[i].getAttribute('data-title') || items[i].innerText || '').toUpperCase();
-      items[i].style.display = (t.indexOf(q) > -1) ? 'flex' : 'none';
+function getCfg() {
+  const base = {
+    circleId: "KOTHAGUDEM BADRADRI",
+    eroId: "ERO/YELLANDU",
+    username: "",
+    password: "",
+    loginUrl: "http://210.212.223.83:9000/EBS/",
+    links: {}
+  };
+  PORTAL_ITEMS.forEach(p => { base.links[p.key] = p.defaultUrl; });
+  try {
+    const saved = JSON.parse(localStorage.getItem('TGNPDCL_SETTINGS_V2') || 'null');
+    if (saved) {
+      base.circleId = saved.circleId ?? base.circleId;
+      base.eroId = saved.eroId ?? base.eroId;
+      base.username = saved.username ?? base.username;
+      base.password = saved.password ?? base.password;
+      base.loginUrl = saved.loginUrl || base.loginUrl;
+      if (saved.links) Object.assign(base.links, saved.links);
     }
-  }
+  } catch (e) {}
+  return base;
+}
 
-  function clearInputs() {
-    ['serviceNo', 'uscNo', 'meterNo'].forEach(function(id) {
-      var el = document.getElementById(id);
-      if (el) el.value = '';
-    });
-    savedLat = "NONE"; savedLon = "NONE";
-    setStatus("Enter Service / USC / Meter & tap icon");
+function sendToApp(str) {
+  if (window.AppInventor && window.AppInventor.setWebViewString) {
+    window.AppInventor.setWebViewString(str);
   }
+}
 
-  function updateFields(s, u, m, lat, lon) {
-    if (s && s !== 'NONE' && document.getElementById('serviceNo')) document.getElementById('serviceNo').value = s;
-    if (u && u !== 'NONE' && document.getElementById('uscNo')) document.getElementById('uscNo').value = u;
-    if (m && m !== 'NONE' && document.getElementById('meterNo')) document.getElementById('meterNo').value = m;
-    if (lat && lat !== 'NONE' && lon && lon !== 'NONE') {
-      savedLat = lat; savedLon = lon;
-      setStatus("GPS Found: " + lat + ", " + lon);
-    }
-  }
+// Render Dashboard Icons dynamically
+function renderDashboard() {
+  const grid = document.getElementById('menuGrid');
+  let html = '';
+  PORTAL_ITEMS.forEach(item => {
+    html += `<div class="tile" data-name="${item.title.toLowerCase()}" onclick="launchPortal('${item.key}')">
+      <div class="icon-box">${item.icon}</div>
+      <span>${item.title}</span>
+    </div>`;
+  });
+  html += `
+    <div class="tile" data-name="location map gps" onclick="openMap()">
+      <div class="icon-box">📍</div><span>LOCATION MAP</span>
+    </div>
+    <div class="tile" data-name="windy radar weather" onclick="openWindy()">
+      <div class="icon-box">🌪️</div><span>WINDY RADAR</span>
+    </div>
+    <div class="tile" data-name="update app sync" onclick="syncCloud()">
+      <div class="icon-box">📲<div class="badge-live">LIVE</div></div><span>UPDATE APP</span>
+    </div>
+    <div class="tile" data-name="portal settings links" onclick="openSettings()">
+      <div class="icon-box">⚙️</div><span>PORTAL SETTINGS</span>
+    </div>`;
+  grid.innerHTML = html;
+}
 
-  function runTab(tabName, customUrl) {
-    var s = (document.getElementById('serviceNo').value || '').trim().toUpperCase();
-    var u = (document.getElementById('uscNo').value || '').trim();
-    var m = (document.getElementById('meterNo').value || '').trim();
-    var sType = 'NONE', sVal = 'NONE';
-    if (s !== '') { sType = 'SERVICE'; sVal = s; }
-    else if (u !== '') { sType = 'USC'; sVal = u; }
-    else if (m !== '') { sType = 'METER'; sVal = m; }
-    sendToApp("RUN|" + tabName + "|" + sType + "|" + sVal + "|" + (s || "NONE") + "|" + (u || "NONE") + "|" + (m || "NONE") + "|" + (customUrl || "NONE"));
-  }
+// Render Screen 2 Link Boxes dynamically (auto-expands when new labels are added)
+function renderSettingsLinks() {
+  const wrap = document.getElementById('dynamicLinkBoxes');
+  let html = `<div class="s-group">
+    <label>Main Login URL</label>
+    <input type="text" id="cfgLoginUrl" onclick="openPopup('cfgLoginUrl', 'Main Login URL', SUGGESTIONS.loginUrl)">
+  </div>`;
+  PORTAL_ITEMS.forEach(item => {
+    const sugs = SUGGESTIONS[item.key] || [item.defaultUrl];
+    html += `<div class="s-group">
+      <label>${item.linkLabel}</label>
+      <input type="text" id="link_${item.key}" onclick="openPopup('link_${item.key}', '${item.linkLabel}', ${JSON.stringify(sugs).replace(/"/g, '&quot;')})">
+    </div>`;
+  });
+  wrap.innerHTML = html;
+}
 
-  function openExternal(url) {
-    sendToApp("OPEN_URL|" + url);
-  }
+function openPopup(inputId, title, list) {
+  if (!list || !list.length) return;
+  activeInputId = inputId;
+  document.getElementById('popupTitle').innerText = title + ' (Tap to paste)';
+  const box = document.getElementById('popupList');
+  box.innerHTML = list.map(val => `<div class="sug-item" onclick="pickSuggestion('${val.replace(/'/g, "\\'")}')">${val}</div>`).join('');
+  document.getElementById('popupBackdrop').style.display = 'flex';
+}
 
-  function openMap() {
-    sendToApp("OPEN_MAP|" + savedLat + "|" + savedLon);
+function pickSuggestion(val) {
+  if (activeInputId && document.getElementById(activeInputId)) {
+    document.getElementById(activeInputId).value = val;
+    showToast('Pasted!');
   }
+  document.getElementById('popupBackdrop').style.display = 'none';
+}
 
-  function openWindy() {
-    sendToApp("OPEN_WINDY|" + savedLat + "|" + savedLon);
-  }
+function closePopup(e) {
+  if (e.target.id === 'popupBackdrop') document.getElementById('popupBackdrop').style.display = 'none';
+}
 
-  function requestCloudSync() {
-    setStatus("Syncing latest updates...");
-    sendToApp("SYNC_CLOUD|NOW");
+function onNumInput(type) {
+  lastEditedType = type;
+  const s = document.getElementById('serviceNo').value.trim();
+  const u = document.getElementById('uscNo').value.trim();
+  const m = document.getElementById('meterNo').value.trim();
+  const key = s || u || m;
+  if (consumerCache[key]) {
+    const d = consumerCache[key];
+    if (d.serviceNo && !s) document.getElementById('serviceNo').value = d.serviceNo;
+    if (d.uscNo && !u) document.getElementById('uscNo').value = d.uscNo;
+    if (d.meterNo && !m) document.getElementById('meterNo').value = d.meterNo;
   }
+}
+
+function clearNumbers() {
+  document.getElementById('serviceNo').value = '';
+  document.getElementById('uscNo').value = '';
+  document.getElementById('meterNo').value = '';
+  document.getElementById('statusHint').innerText = 'Enter Service / USC / Meter & tap icon';
+}
+
+function filterTiles() {
+  const q = document.getElementById('menuSearch').value.toLowerCase();
+  document.querySelectorAll('.tile').forEach(t => {
+    t.style.display = t.dataset.name.includes(q) ? 'flex' : 'none';
+  });
+}
+
+function openSettings() {
+  renderSettingsLinks();
+  const c = getCfg();
+  document.getElementById('cfgCircle').value = c.circleId;
+  document.getElementById('cfgEro').value = c.eroId;
+  document.getElementById('cfgUser').value = c.username;
+  document.getElementById('cfgPass').value = c.password;
+  document.getElementById('cfgLoginUrl').value = c.loginUrl;
+  PORTAL_ITEMS.forEach(p => {
+    const el = document.getElementById('link_' + p.key);
+    if (el) el.value = c.links[p.key] || p.defaultUrl;
+  });
+  document.getElementById('screen1').style.display = 'none';
+  document.getElementById('screen2').style.display = 'block';
+}
+
+function closeSettings() {
+  document.getElementById('screen2').style.display = 'none';
+  document.getElementById('screen1').style.display = 'block';
+}
+
+function saveSettings() {
+  const linksObj = {};
+  PORTAL_ITEMS.forEach(p => {
+    const el = document.getElementById('link_' + p.key);
+    linksObj[p.key] = el ? el.value.trim() : p.defaultUrl;
+  });
+  const cfg = {
+    circleId: document.getElementById('cfgCircle').value.trim(),
+    eroId: document.getElementById('cfgEro').value.trim(),
+    username: document.getElementById('cfgUser').value.trim(),
+    password: document.getElementById('cfgPass').value.trim(),
+    loginUrl: document.getElementById('cfgLoginUrl').value.trim(),
+    links: linksObj
+  };
+  localStorage.setItem('TGNPDCL_SETTINGS_V2', JSON.stringify(cfg));
+  sendToApp('SAVE_CFG|' + JSON.stringify(cfg));
+  showToast('Saved Permanently!');
+  setTimeout(closeSettings, 600);
+}
+
+function launchPortal(tab) {
+  const s = document.getElementById('serviceNo').value.trim();
+  const u = document.getElementById('uscNo').value.trim();
+  const m = document.getElementById('meterNo').value.trim();
+  if (!s && !u && !m) {
+    showToast('Please enter Service, USC, or Meter No');
+    return;
+  }
+  let sType = lastEditedType;
+  let sVal = sType === 'USC' ? u : (sType === 'METER' ? m : s);
+  if (!sVal) {
+    if (s) { sType = 'SERVICE'; sVal = s; }
+    else if (u) { sType = 'USC'; sVal = u; }
+    else { sType = 'METER'; sVal = m; }
+  }
+  const payload = {
+    tab: tab,
+    sType: sType,
+    sVal: sVal,
+    serviceNo: s,
+    uscNo: u,
+    meterNo: m,
+    cfg: getCfg()
+  };
+  sendToApp('RUN|' + JSON.stringify(payload));
+}
+
+function openMap() {
+  const lat = localStorage.getItem('LAST_LAT');
+  const lon = localStorage.getItem('LAST_LON');
+  if (!lat || !lon) {
+    showToast('First tap Service Details to fetch GPS!');
+    return;
+  }
+  sendToApp('OPEN_MAP|' + lat + '|' + lon);
+}
+
+function openWindy() {
+  const lat = localStorage.getItem('LAST_LAT') || '17.5954';
+  const lon = localStorage.getItem('LAST_LON') || '80.3192';
+  sendToApp('OPEN_WINDY|' + lat + '|' + lon);
+}
+
+function syncCloud() {
+  showToast('Updating App & Engine...');
+  sendToApp('SYNC_CLOUD');
+}
+
+window.updateFields = function(sNo, uNo, mNo, lat, lon) {
+  if (sNo) document.getElementById('serviceNo').value = sNo;
+  if (uNo) document.getElementById('uscNo').value = uNo;
+  if (mNo) document.getElementById('meterNo').value = mNo;
+  if (lat && lon) {
+    localStorage.setItem('LAST_LAT', lat);
+    localStorage.setItem('LAST_LON', lon);
+    document.getElementById('statusHint').innerText = '📍 GPS: ' + lat + ', ' + lon;
+  }
+  const obj = { serviceNo: sNo, uscNo: uNo, meterNo: mNo, lat: lat, lon: lon };
+  if (sNo) consumerCache[sNo] = obj;
+  if (uNo) consumerCache[uNo] = obj;
+  if (mNo) consumerCache[mNo] = obj;
+  localStorage.setItem('TGNPDCL_CACHE', JSON.stringify(consumerCache));
+};
+
+// Restore saved settings from App Inventor TinyDB if localStorage was cleared
+window.restoreCfgFromApp = function(jsonStr) {
+  if (jsonStr && jsonStr.length > 5 && !localStorage.getItem('TGNPDCL_SETTINGS_V2')) {
+    localStorage.setItem('TGNPDCL_SETTINGS_V2', jsonStr);
+  }
+};
+
+renderDashboard();
 </script>
 </body>
 </html>
